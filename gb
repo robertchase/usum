@@ -10,11 +10,14 @@ args = parser.parse_args()
 groups = {}
 for linenum, line in enumerate(sys.stdin, start=1):
     toks = line.split()
-    names = list(toks[i-1] for i in args.groupby)
-    key = ' '.join(names)
-    vcols = list(i for i in range(1, len(toks) + 1) if i not in args.groupby)
-    values = list(int(toks[i-1]) for i in vcols)
-    sums = groups.get(key)
+    try:
+        names = list(toks[i-1] for i in args.groupby)
+        key = ' '.join(names)
+        vcols = list(i for i in range(1, len(toks)+1) if i not in args.groupby)
+        values = list(int(toks[i-1]) for i in vcols)
+        sums = groups.get(key)
+    except Exception as e:
+        raise Exception('line=%s: %s' % (linenum, str(e)))
     groups[key] = map(operator.add, sums, values) if sums else values
 for k, v in groups.items():
     sys.stdout.write('%s %s\n' % (k, ' '.join((str(n) for n in v))))
