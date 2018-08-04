@@ -7,7 +7,7 @@ cli tool for summing columns in a text file
 
 In the spirit of small and focused command-line programs that comprise
 the (*)nix shell,
-`usum` provides a simple way to select sum columns in text data.
+`usum` provides a simple way to sum columns in text data.
 
 ### example
 
