@@ -23,7 +23,7 @@ Aug 2 17
 Aug 2 54
 ```
 
-Sum the first two columns (think of the `SQL groupby` functionality):
+Sum by the first two columns (think of the `SQL groupby` functionality):
 
 ```
 home/test:~> cat data | usum 1 2

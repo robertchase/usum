@@ -1,17 +1,25 @@
 #! /usr/bin/env python
+"""Sum by column CLI utility"""
 import operator
 
 
 def num(value):
-    f = float(value)
+    """Parse number as float or int."""
+    value_float = float(value)
     try:
-        i = int(value)
+        value_int = int(value)
     except ValueError:
-        return f
-    return i if i == f else f
+        return value_float
+    return value_int if value_int == value_float else value_float
 
 
 def group_by(data, cols):
+    """Sum data by specified columns
+
+        data -- iterable of lines of data to be summed
+        cols -- list of columns that comprise the key
+                (other columns will be summed)
+    """
     groups = {}
     for linenum, line in enumerate(data, start=1):
         toks = line.split()
@@ -24,22 +32,29 @@ def group_by(data, cols):
             values = list(num(toks[i-1]) for i in vcols)
             sums = groups.get(key)
             if sums and len(values) != len(sums):
-                raise Exception("number of columns doesnt match key='%s'" % key)
-        except Exception as e:
-            raise Exception('line=%s: %s' % (linenum, str(e)))
+                raise Exception(
+                    "number of columns doesnt match key='%s'" % key
+                )
+        except Exception as err:
+            raise Exception('line=%s: %s' % (linenum, str(err)))
         groups[key] = list(map(operator.add, sums, values)) if sums else values
     return groups
 
 
-if __name__ == '__main__':
-    import argparse
-    import sys
-
+def main():
+    """Main handler."""
     parser = argparse.ArgumentParser(description='sum group by')
     parser.add_argument('groupby', nargs='*', type=int)
     args = parser.parse_args()
 
     groups = group_by(sys.stdin, args.groupby)
 
-    for k, v in groups.items():
-        sys.stdout.write('%s %s\n' % (k, ' '.join((str(n) for n in v))))
+    for key, val in groups.items():
+        sys.stdout.write('%s %s\n' % (key, ' '.join((str(n) for n in val))))
+
+
+if __name__ == '__main__':
+    import argparse
+    import sys
+
+    main()
